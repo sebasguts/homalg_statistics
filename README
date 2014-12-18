@@ -1,0 +1,14 @@
+Homalg statistics
+
+Copyright 2014 by Sebastian Gutsche (sebastian.gutsche@gmail.com)
+License: WTFPL – Do What the Fuck You Want to Public License
+
+Creates a simple statistic about the homalg project.
+Just run
+./create_statistics
+Statistic will be saved in stats.csv.
+
+Needs find, cat, wc, git
+
+To get an up-to-date statistic, please edit the year variable in the script.
+

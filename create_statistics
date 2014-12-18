@@ -13,10 +13,8 @@ for i in $homalg_modules; do git clone git@github.com:homalg-project/${i}.git re
 
 for i in $homalg_modules; do cd repos/${i}; git commit --allow-empty -m "Update"; cd ../..; done
 
-rm stats.txt
-
-echo "Stats" > stats.txt
-echo "Month,Number of packages,lines of code;" >> stats.txt
+echo "Stats" > stats.csv
+echo "Month,Number of packages,lines of code;" >> stats.csv
 
 for year in $years; do
   for month in $months; do
@@ -47,7 +45,7 @@ for year in $years; do
       git checkout master 1>/dev/null 2>&1
       cd ../..
     done
-    echo "${year}-${month},${packages},${loc};" >> stats.txt
+    echo "${year}-${month},${packages},${loc};" >> stats.csv
   done
 done
 
