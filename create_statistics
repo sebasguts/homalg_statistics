@@ -1,24 +1,22 @@
 #!/bin/bash
 
-export homalg_modules="AbelianSystems alexander AlgebraicThomas AutoDoc Blocks CategoriesForHomalg Conley D-Modules ExamplesForHomalg Gauss GaussForHomalg GradedModules GradedRingForHomalg homalg HomalgToCAS IO_ForHomalg k-Points LessGenerators LetterPlace LocalizeRingForHomalg MapleForHomalg MatricesForHomalg Modules RingsForHomalg Orbifolds PrimaryDecomposition SCO SCSCP_ForHomalg Sheaves SimplicialObjects SingularForHomalg SystemTheory ToolsForHomalg VirtualCAS CombinatoricsForHomalg test_suite ToricVarieties"
+homalg_modules="AbelianSystems alexander AlgebraicThomas AutoDoc Blocks CategoriesForHomalg Conley D-Modules ExamplesForHomalg Gauss GaussForHomalg GradedModules GradedRingForHomalg homalg HomalgToCAS IO_ForHomalg k-Points LessGenerators LetterPlace LocalizeRingForHomalg MapleForHomalg MatricesForHomalg Modules RingsForHomalg Orbifolds PrimaryDecomposition SCO SCSCP_ForHomalg Sheaves SimplicialObjects SingularForHomalg SystemTheory ToolsForHomalg VirtualCAS CombinatoricsForHomalg test_suite ToricVarieties"
+years="2006 2007 2008 2009 2010 2011 2012 2013 2014"
+months="1 2 3 4 5 6 7 8 9 10 11 12"
+filextensions="gd gi g"
 
-# rm -rf repos
-# 
-# mkdir repos
-# 
-# for i in $homalg_modules; do git clone git@github.com:homalg-project/${i}.git repos/${i}; done
-# 
+rm -rf repos
+
+mkdir repos
+
+for i in $homalg_modules; do git clone git@github.com:homalg-project/${i}.git repos/${i}; done
+
 for i in $homalg_modules; do cd repos/${i}; git commit --allow-empty -m "Update"; cd ../..; done
 
 rm stats.txt
 
 echo "Stats" > stats.txt
-
-# years="2006 2007 2008 2009 2010 2011 2012 2013 2014"
-
-years="2012"
-
-months="1 2 3 4 5 6 7 8 9 10 11 12"
+echo "Month,Number of packages,lines of code;" >> stats.txt
 
 for year in $years; do
   for month in $months; do
@@ -31,24 +29,19 @@ for year in $years; do
       git checkout `git rev-list -n 1 --before="${year}-${month}-01" master` 1>/dev/null 2>&1
       hash=$(git rev-parse HEAD)
       if [ "$master_hash" = "$hash" ]; then
-        echo "Repo was not there ${i} ${year} ${month}"
+        echo "${i} was not there in ${year}/${month}"
       else
-        hash=$(git rev-parse HEAD)
         Y=$(cat ../../hashes.txt | grep ${hash} )
         if [ "$Y" = "" ]; then
           packages=$(($packages+1))
           echo $hash >> ../../hashes.txt
-          for filname in $(find . -iname "*.gd"); do
-            loc=$((${loc}+$(cat ${filname} | wc -l)))
-          done
-          for filname in $(find . -iname "*.gi"); do
-            loc=$((${loc}+$(cat ${filname} | wc -l)))
-          done
-          for filname in $(find . -iname "*.g"); do
-            loc=$((${loc}+$(cat ${filname} | wc -l)))
+          for extension in $filextensions; do
+            for filname in $(find . -iname "*.${extension}"); do
+              loc=$((${loc}+$(cat ${filname} | wc -l)))
+            done
           done
         else
-          echo "${i} was already equal to another"
+          echo "${i} was already equal to another repo"
         fi
       fi
       git checkout master 1>/dev/null 2>&1
