@@ -35,7 +35,6 @@ for year in $years; do
           packages=$(($packages+1))
           echo $hash >> ../../hashes.txt
           git log --format='%aN' | sort -u >> ../../current_authors.txt
-          done
         else
           echo "${i} was already equal to another repo"
         fi
